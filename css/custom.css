@@ -106,3 +106,222 @@
   border-radius: var(--code-radius);
 }
 
+/* ==========================================================================
+   中文排版
+   Material 的行高 1.6 是按西文调的；中文方块字需要更松的行距才不挤。
+   1rem = 20px（Material 把 html 设为 font-size:125%），所以：
+     1.75 行高 ≈ 28px      0.8rem ≈ 16px
+   ========================================================================== */
+.md-typeset {
+  line-height: 1.75;
+}
+
+/* 段落之间留一点呼吸，但不要像 Material 默认那样把列表项也撑开 */
+.md-typeset p {
+  margin: 0.9em 0;
+}
+
+/* 列表项之间也稍微松一点（中文笔记里长列表很常见） */
+.md-typeset li + li {
+  margin-top: 0.25em;
+}
+
+/* 标题字重改用 500：
+   本机霞鹜文楷只有 300/400/500 三档、没有 700，写 700 会由浏览器
+   合成假粗体（边缘发毛）。显式指定 500 会直接命中 Medium 字重，更干净。 */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6,
+.md-typeset th,
+.md-typeset dt {
+  font-weight: 500;
+}
+
+/* 正文里的粗体同理 */
+.md-typeset strong {
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   表格
+   Material 的表格没有斑马纹，行一多就容易看串行；表头也只是白底加粗。
+   ========================================================================== */
+.md-typeset table:not([class]) {
+  border-radius: var(--code-radius);
+  overflow: hidden; /* 让圆角能裁住表头的背景色 */
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+.md-typeset table:not([class]) tr:nth-child(2n) {
+  background-color: var(--md-default-fg-color--lightest);
+}
+
+/* 悬停整行高亮，方便横向读数 */
+.md-typeset table:not([class]) tbody tr:hover {
+  background-color: var(--md-accent-fg-color--transparent);
+}
+
+/* ==========================================================================
+   引用块
+   默认只是一条灰竖线，加上主色竖线 + 极淡底色，更像"引文"
+   ========================================================================== */
+.md-typeset blockquote {
+  border-left-color: var(--md-primary-fg-color);
+  border-radius: 0 var(--code-radius) var(--code-radius) 0;
+  background-color: var(--md-default-fg-color--lightest);
+  padding: 0.1rem 0 0.1rem 0.9rem;
+}
+
+/* ==========================================================================
+   图片：圆角 + 柔和投影
+   （Material 内置 emoji 是内联 SVG，不是 <img>，所以不会被误伤）
+   ========================================================================== */
+.md-typeset img {
+  border-radius: var(--code-radius);
+}
+
+.md-typeset p > img,
+.md-typeset figure img,
+.md-typeset .glightbox img {
+  box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.12);
+}
+
+/* ==========================================================================
+   选中文字 / 滚动条
+   ========================================================================== */
+.md-typeset ::selection,
+.md-typeset::selection {
+  background-color: color-mix(in srgb, var(--md-primary-fg-color) 35%, transparent);
+}
+
+/* 代码块横向滚动条做细一点，默认的偏粗 */
+.md-typeset pre > code::-webkit-scrollbar {
+  height: 0.3rem;
+}
+.md-typeset pre > code::-webkit-scrollbar-thumb {
+  background-color: var(--md-default-fg-color--lighter);
+  border-radius: 0.15rem;
+}
+
+/* ==========================================================================
+   侧栏稍宽一点
+   Material 默认 12.1rem（242px），中文导航项容易折行，放宽到 13rem。
+   注意：不从动 .md-grid 的 max-width —— 侧栏变宽后正文自然变窄，
+   中文每行字数更接近舒适的 35~45 字。
+   ========================================================================== */
+.md-sidebar {
+  width: 13rem;
+}
+
+/* ==========================================================================
+   深色模式调暖
+   Material 的 slate 配色用 --md-hue: 225（偏蓝）生成整套灰阶。
+   改成暖色相，深色模式才会和暖棕主色同一个色温，不再"蓝灰配棕"。
+   ========================================================================== */
+[data-md-color-scheme="slate"] {
+  --md-hue: 25;
+}
+
+/* ==========================================================================
+   打印
+   打印笔记时去掉导航/侧栏/浮动按钮，并把链接地址印出来
+   ========================================================================== */
+@media print {
+  .md-header,
+  .md-sidebar,
+  .md-footer,
+  .md-top,
+  .md-dialog,
+  .md-skip,
+  .md-code__nav {
+    display: none !important;
+  }
+
+  .md-content {
+    max-width: 100%;
+  }
+
+  /* 正文里的链接：在文字后面补出真实地址，纸面上也能查 */
+  .md-typeset a[href^="http"]:not(.headerlink)::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: var(--md-default-fg-color--light);
+    word-break: break-all;
+  }
+}
+
+/* ==========================================================================
+   首页 hero 横幅
+   由 overrides/main.html 渲染，位置在 base.html 的 {% raw %}{% block hero %}{% endraw %}，
+   即「页头之下、tabs 之上」，是通栏宽度，且与正文（卡片网格）互不影响。
+   注意：hero 不在 .md-typeset 里，所以拿不到 Material 的排版规则，
+   字号/字重/边距都得自己写全。
+   ========================================================================== */
+.txc-hero {
+  background: linear-gradient(
+    135deg,
+    var(--md-primary-fg-color--dark) 0%,
+    var(--md-primary-fg-color) 100%
+  );
+  color: var(--md-primary-bg-color);
+  padding: 3rem 0 3.2rem;
+  text-align: center;
+}
+
+.txc-hero__title {
+  color: inherit;
+  font-size: 2.1rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 0.4rem;
+}
+
+.txc-hero__subtitle {
+  color: inherit;
+  font-size: 0.85rem;
+  margin: 0 0 1.6rem;
+  opacity: 0.85;
+}
+
+.txc-hero__actions {
+  margin: 0;
+}
+
+/* 次要按钮：只留描边，压在深色横幅上 */
+.txc-hero .md-button {
+  color: var(--md-primary-bg-color);
+  border-color: color-mix(in srgb, var(--md-primary-bg-color) 55%, transparent);
+  margin: 0.2rem 0.3rem;
+}
+
+.txc-hero .md-button:hover {
+  background-color: color-mix(in srgb, var(--md-primary-bg-color) 15%, transparent);
+  border-color: var(--md-primary-bg-color);
+  color: var(--md-primary-bg-color);
+}
+
+/* 主按钮：反白，在棕色底上最醒目 */
+.txc-hero .md-button--primary {
+  background-color: var(--md-primary-bg-color);
+  border-color: var(--md-primary-bg-color);
+  color: var(--md-primary-fg-color);
+}
+
+.txc-hero .md-button--primary:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--md-primary-bg-color) 85%,
+    var(--md-primary-fg-color)
+  );
+  border-color: transparent;
+  color: var(--md-primary-fg-color);
+}
+
+
+
