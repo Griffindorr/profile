@@ -1,2 +1,69 @@
-/* 自定义样式 */
-.md-typeset { font-size: 0.78rem; }
+/* ==========================================================================
+   字体
+   Material 内置的变量链路是：
+     --md-text-font-family: var(--md-text-font, _), -apple-system, ...
+     --md-code-font-family: var(--md-code-font, _), SFMono-Regular, ...
+   所以只需覆盖 --md-text-font / --md-code-font，
+   后面的系统字体兜底由 Material 自己提供，CDN 挂了也不会乱码。
+
+   字体栈的设计意图（本地优先 + 线上兜底）：
+     1. "LXGW WenKai"        —— 本机已安装（~/Library/Fonts/LXGWWenKai-*.ttf）
+                                命中则零下载，本地预览瞬时渲染
+     2. "LXGW WenKai Screen" —— 上面没命中时（访客的机器）才去下载网络字体
+                                两个 family 渲染几乎一致，观感统一
+     3. 系统无衬线兜底       —— 网络字体也挂了时的最后防线
+   ========================================================================== */
+:root {
+  --md-text-font: "LXGW WenKai", "LXGW WenKai Screen", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --md-code-font: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+/* ==========================================================================
+   代码块圆角
+   Material 的默认值很"方"：代码块 border-radius: 0，行内 code 只有 0.1rem。
+   Material 把 html font-size 设为 125%，所以 1rem = 20px：
+     0.2rem = 4px    0.3rem = 6px    0.4rem = 8px
+   想改大小只动下面这两个变量即可。
+   ========================================================================== */
+:root {
+  --code-radius: 0.3rem;        /* 代码块：6px */
+  --code-radius-inline: 0.2rem; /* 行内 code：4px */
+}
+
+/* 行内 code */
+.md-typeset code {
+  border-radius: var(--code-radius-inline);
+}
+
+/* 独立代码块（无行号、无文件名） */
+.md-content__inner > pre > code,
+.md-content__inner > .highlight > pre > code,
+.md-content__inner > .highlight > .highlighttable > tbody > tr > .code > div > pre > code {
+  border-radius: var(--code-radius);
+}
+
+/* 带文件名时，文件名栏和代码块上下拼接成一体，只圆外侧两角，
+   避免中间出现一个多余的缺口 */
+.md-content__inner > .highlight > .filename,
+.md-content__inner > .highlight > .highlighttable > tbody > tr > .filename span.filename {
+  border-radius: var(--code-radius) var(--code-radius) 0 0;
+}
+.md-content__inner > .highlight > .filename + pre > code {
+  border-radius: 0 0 var(--code-radius) var(--code-radius);
+}
+
+/* 带行号时，左侧行号列只圆左边两角，右侧代码块只圆右边两角，
+   两者拼起来才是完整的圆角矩形 */
+.md-content__inner > .highlight > .highlighttable > tbody > tr > .linenos {
+  border-radius: var(--code-radius) 0 0 var(--code-radius);
+}
+.md-content__inner > .highlight > .highlighttable > tbody > tr > .code > div > pre > code {
+  border-radius: 0 var(--code-radius) var(--code-radius) 0;
+}
+
+/* 右上角"复制"按钮的悬浮底板，跟行内 code 用同一档 */
+.md-code__nav {
+  border-radius: var(--code-radius-inline);
+}
