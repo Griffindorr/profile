@@ -6,20 +6,43 @@
    所以只需覆盖 --md-text-font / --md-code-font，
    后面的系统字体兜底由 Material 自己提供，CDN 挂了也不会乱码。
 
-   字体栈的设计意图（本地优先 + 线上兜底）：
-     1. "霞鹜文楷"            —— 本机已安装（~/Library/Fonts/LXGWWenKai-*.ttf）
-                                 命中则零下载，本地预览瞬时渲染
-                                 ⚠️ 必须写中文 Family 名：系统里该字体的
-                                    Family = "霞鹜文楷"，而 "LXGW WenKai" 只是
-                                    Full Name，浏览器做本地匹配时不认，会直接跳过
-     2. "LXGW WenKai"         —— 其他平台（Windows/Linux）上 family 名可能是英文
-     3. "LXGW WenKai Screen"  —— 访客机器上没有这个字体时才去下载网络字体
-                                 与上面两者渲染几乎一致，观感统一
-     4. 系统无衬线兜底        —— 网络字体也挂了时的最后防线
+   ⚠️ 为什么用 @font-face + local()，而不是直接在 font-family 里写字体名？
+   这款字体的 name 表里同时存在两个 family 名：
+     [lang=0x0409 英文] Family = "LXGW WenKai"
+     [lang=0x0804 中文] Family = "霞鹜文楷"
+   macOS 会按当前系统语言只注册其中一个，导致"写哪个名字能命中"随机器而变。
+   而 local() 的参数会依次匹配 family 名 / Full Name / PostScript 名，
+   是引用本机字体的最可靠方式；本机没有时该 family 直接不可用，
+   自动落到字体栈的下一个（网络字体），行为可控。
    ========================================================================== */
+@font-face {
+  font-family: "WenKai Local";
+  font-weight: 300;
+  font-display: swap;
+  src: local("霞鹜文楷 Light"), local("LXGW WenKai Light"), local("霞鹜文楷"),
+    local("LXGW WenKai"), local("LXGWWenKai-Light");
+}
+@font-face {
+  font-family: "WenKai Local";
+  font-weight: 400;
+  font-display: swap;
+  src: local("霞鹜文楷"), local("LXGW WenKai"), local("LXGWWenKai-Regular");
+}
+@font-face {
+  font-family: "WenKai Local";
+  font-weight: 500;
+  font-display: swap;
+  src: local("霞鹜文楷 Medium"), local("LXGW WenKai Medium"), local("霞鹜文楷"),
+    local("LXGW WenKai"), local("LXGWWenKai-Medium");
+}
+
 :root {
-  --md-text-font: "霞鹜文楷", "LXGW WenKai", "LXGW WenKai Screen", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  /* 1. WenKai Local       —— 上方的 @font-face：命中本机已安装的霞鹜文楷，零下载
+     2. LXGW WenKai Screen —— 本机没有时才下载网络字体（访客走的这条）
+     3. 系统无衬线兜底      —— 网络字体也挂了时的最后防线 */
+  --md-text-font: "WenKai Local", "LXGW WenKai Screen", "LXGW WenKai",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC",
+    sans-serif;
   --md-code-font: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas,
     "Liberation Mono", monospace;
 }

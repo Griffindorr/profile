@@ -103,7 +103,7 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
-  - css/custom.css
+  - css/custom.css?v=3
 
 validation:
   nav:
