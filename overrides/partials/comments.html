@@ -1,0 +1,52 @@
+{#-
+  giscus 评论（基于 GitHub Discussions）
+  ----------------------------------------------------------------------------
+  Material 会无条件 include 这个 partial，所以这里用 page.meta.comments 做开关：
+  只有在你想要评论的页面 front matter 里写
+
+      ---
+      comments: true
+      ---
+
+  才会渲染。没写的页面完全不受影响。
+
+  要启用需要三步：
+    1. 仓库 Settings → General → Features → 勾选 Discussions
+    2. 在 https://github.com/apps/giscus 安装 giscus App，授权这个仓库
+    3. 打开 https://giscus.app/ ，填入仓库名，它会生成 repo-id 和 category-id，
+       把两个 id 填到 mkdocs.yml 的 extra.giscus 下（不要填在这里）
+-#}
+{% if page and page.meta and page.meta.comments %}
+  {% set giscus = config.extra.giscus %}
+  {% if giscus and giscus.repo_id and giscus.category_id %}
+    <h2 id="__comments">评论</h2>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="{{ giscus.repo }}"
+      data-repo-id="{{ giscus.repo_id }}"
+      data-category="{{ giscus.category | default('Announcements') }}"
+      data-category-id="{{ giscus.category_id }}"
+      data-mapping="{{ giscus.mapping | default('pathname') }}"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme="{{ giscus.theme | default('preferred_color_scheme') }}"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+  {% else %}
+    <div class="admonition warning">
+      <p class="admonition-title">评论还没配置</p>
+      <p>
+        这篇页面开了 <code>comments: true</code>，但
+        <code>mkdocs.yml</code> 的 <code>extra.giscus.repo_id</code> /
+        <code>category_id</code> 还是空的。去
+        <a href="https://giscus.app/" target="_blank" rel="noopener">giscus.app</a>
+        生成后填上即可。
+      </p>
+    </div>
+  {% endif %}
+{% endif %}

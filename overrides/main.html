@@ -1,0 +1,36 @@
+{#-
+  首页 hero 横幅
+  ----------------------------------------------------------------------------
+  为什么要单独开一个 overrides 文件：
+  Material 的 base.html 里 {% raw %}{% block hero %}{% endraw %} 位于「页头之下、tabs 之上」，
+  和 {% raw %}{% block content %}{% endraw %}（正文）是完全独立的两块。
+  所以在这里加横幅，不会影响首页正文里的卡片网格。
+
+  只在首页渲染。⚠️ 这里刻意不用 page.is_homepage：
+  MkDocs 的 is_homepage 要求
+      is_top_level and is_index and file.url in ('.', './', 'index.html')
+  而本项目 nav 把首页写成了分组形式（"首页:" 下面再列 index.md），
+  于是 index.md 有了 parent，is_top_level 变成 False，is_homepage 不成立。
+  改用「URL 是否为站点根」判断，与 nav 写法无关，更稳。
+-#}
+{% extends "base.html" %}
+
+{% block hero %}
+  {% if page and page.url in ('.', './', '') %}
+    <section class="txc-hero">
+      <div class="md-grid">
+        <h1 class="txc-hero__title">{{ config.site_name }}</h1>
+        {% if config.site_description %}
+          <p class="txc-hero__subtitle">{{ config.site_description }}</p>
+        {% endif %}
+        <p class="txc-hero__actions">
+          <a class="md-button md-button--primary" href="{{ 'cs/' | url }}">
+            开始阅读
+          </a>
+          <a class="md-button" href="{{ 'blog/' | url }}">博客</a>
+          <a class="md-button" href="{{ 'tags/' | url }}">标签</a>
+        </p>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

@@ -12,6 +12,8 @@ theme:
   name: material
   language: zh
   font: false
+  # 自定义模板目录：首页 hero 横幅 + giscus 评论位
+  custom_dir: overrides
   # ⚠️ 换图后必须把 ?v= 的数字 +1
   # GitHub Pages 对这些文件设了 cache-control: max-age=600，且文件名不变的话
   # 浏览器会直接用缓存里的旧图、根本不去下载。改 URL 才能强制刷新。
@@ -28,39 +30,81 @@ theme:
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: brown
-      accent: brown
+      # 深色模式下棕色作强调色的对比度太低（链接会看不清），
+      # 换一个同样是暖色但更亮的，保证可读性
+      accent: deep orange
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
   features:
     - navigation.instant
     - navigation.instant.progress
+    - navigation.instant.prefetch
     - navigation.tracking
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
     - navigation.top
     - navigation.footer
+    - navigation.path
     - toc.follow
+    - toc.integrate
+    - header.autohide
     - search.suggest
     - search.highlight
     - search.share
     - content.code.copy
+    - content.code.select
     - content.code.annotate
     - content.tabs.link
     - content.action.edit
+    - content.action.view
+    - content.footnote.tooltips
 
 plugins:
   - search:
       lang: zh
+  # 标签：页面 front matter 里写 tags: [a, b]。
+  # 索引页由 nav 里的 tags.md + 页面内的 <!-- material/tags --> 标记生成
+  # （tags_file 选项在 9.7 已弃用，不再需要）
+  - material/tags
+  # 博客：带日期的文章流（docs/blog/posts/*.md）
+  - material/blog:
+      blog_dir: blog
+      post_dir: "{blog}/posts"
+      archive: true
+      categories: true
   - glightbox
   - git-revision-date-localized:
       type: date
       timezone: Asia/Shanghai
       locale: zh
       fallback_to_build_date: true
+      # blog/index.md 是 blog 插件生成的虚拟页面，磁盘上没有这个文件，
+      # git log 查不到它会发 warning，而 --strict 会把 warning 当错误
+      exclude:
+        - blog/index.md
+  # RSS 订阅源，日期取页面的 date 元数据
+  - rss:
+      date_from_meta:
+        as_creation: date.created
+        as_update: date.updated
+      categories:
+        - categories
+        - tags
+      use_material_blog: true
+      # 关掉 git 取日期：blog 生成的临时页面不在仓库里，会刷一屏 INFO 噪音
+      use_git: false
+  # HTML/CSS/JS 压缩。
+  # ⚠️ 别把这条换成 material/optimize —— 名字容易误会，它只压【图片】，
+  # 不碰 CSS/JS。而且它需要额外依赖：PNG 要系统命令 pngquant，
+  # JPG 要 Pillow（mkdocs-material[imaging]），当前环境两者都没有，
+  # 强行开启会直接让构建失败。等站里有大量插图时再回来启用它。
   - minify:
       minify_html: true
+  # ⚠️ material/offline 已移除：它会把 config.use_directory_urls 强制设为 False
+  # （为了生成能用 file:// 直接打开的结构），副作用是全站 URL 从 /cs/ 变成
+  # /cs.html，改动面太大。真需要离线包时可单独构建一份，不要挂在主站构建上。
 
 markdown_extensions:
   - toc:
@@ -106,21 +150,53 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
-  - css/custom.css?v=4
+  - css/custom.css?v=6
 
 validation:
   nav:
     omitted_files: info
     not_found: warn
   links:
-    not_found: ignore
+    # 从 ignore 收紧为 warn：写错内链会立刻报出来，
+    # 配合 CI 里的 --strict 会直接让构建失败，避免死链悄悄上线
+    not_found: warn
     absolute_links: ignore
     unrecognized_links: ignore
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Griffindorr
+      name: GitHub
+    - icon: fontawesome/solid/envelope
+      link: mailto:jiandong356@gmail.com
+      name: 邮件
+    - icon: fontawesome/solid/rss
+      link: https://griffindorr.github.io/profile/feed_rss_created.xml
+      name: RSS 订阅
+    - icon: fontawesome/solid/house
+      link: https://griffindorr.github.io/profile/
+      name: 本站
+
+  # giscus 评论（默认未启用）。
+  # 用法：先按 overrides/partials/comments.html 顶部注释做完三步，
+  # 把 repo_id / category_id 填到这里，再在需要评论的页面 front matter 写
+  #   comments: true
+  giscus:
+    repo: Griffindorr/profile
+    repo_id: ""          # ← 从 https://giscus.app/ 生成后填这里
+    category: Announcements
+    category_id: ""      # ← 同上
+    mapping: pathname
+    theme: preferred_color_scheme
 
 nav:
   - 首页:
       - index.md
+  - 博客:
+      - blog/index.md
   - 计算机:
       - cs/index.md
       - Rust:
           - 基础语法: cs/rust/basic.md
+  - 标签: tags.md
