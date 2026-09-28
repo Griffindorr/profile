@@ -12,8 +12,11 @@ theme:
   name: material
   language: zh
   font: false
-  favicon: assets/favicon.png
-  logo: assets/logo.png
+  # ⚠️ 换图后必须把 ?v= 的数字 +1
+  # GitHub Pages 对这些文件设了 cache-control: max-age=600，且文件名不变的话
+  # 浏览器会直接用缓存里的旧图、根本不去下载。改 URL 才能强制刷新。
+  favicon: assets/favicon.png?v=2
+  logo: assets/logo.png?v=2
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
