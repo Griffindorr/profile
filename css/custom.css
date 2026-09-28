@@ -94,3 +94,15 @@
 .md-code__nav {
   border-radius: var(--code-radius-inline);
 }
+
+/* ==========================================================================
+   首页卡片（Material 内置的 .grid.cards）
+   Material 默认给卡片 0.1rem 圆角，比代码块的 0.3rem 小一圈，放在同一页
+   里会显得不统一，这里对齐成同一档。
+   ========================================================================== */
+.md-typeset .grid.cards > ol > li,
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border-radius: var(--code-radius);
+}
+
