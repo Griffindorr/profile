@@ -1,6 +1,6 @@
 ---
 tags:
-  - 计算机
+  - Computer Science
 ---
 
 # 计算机

@@ -4,7 +4,7 @@
 
 <div class="grid cards" markdown>
 
--   :material-laptop:{ .lg .middle } __计算机__
+-   :material-laptop:{ .lg .middle } __Computer Science__
 
     ---
 

@@ -195,7 +195,7 @@ nav:
       - index.md
   - 博客:
       - blog/index.md
-  - 计算机:
+  - Computer Science:
       - cs/index.md
       - Rust:
           - 基础语法: cs/rust/basic.md
