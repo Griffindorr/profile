@@ -150,7 +150,7 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
-  - css/custom.css?v=6
+  - css/custom.css?v=7
 
 validation:
   nav:
@@ -197,8 +197,9 @@ nav:
       - blog/index.md
   - Computer Science:
       - cs/index.md
-      - Rust:
-          - 基础语法: cs/rust/basic.md
+      - H100:
+          - cs/h100/index.md
+          - Asynchronicity and barriers: cs/h100/asynchronicity_and_barriers.md
       - 论文阅读:
           - cs/paper_reading/index.md
           - 视频生成: 

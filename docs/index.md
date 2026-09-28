@@ -12,13 +12,13 @@
 
     [:octicons-arrow-right-24: 进入](cs/index.md)
 
--   :material-language-rust:{ .lg .middle } __Rust 基础语法__
+-   :material-chip:{ .lg .middle } __NVIDIA H100__
 
     ---
 
-    所有权、借用、生命周期
+    GPU 异步执行、TMA、屏障与底层编程
 
-    [:octicons-arrow-right-24: 进入](cs/rust/basic.md)
+    [:octicons-arrow-right-24: 进入](cs/h100/index.md)
 
 </div>
 
