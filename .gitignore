@@ -1,0 +1,6 @@
+site/
+.venv/
+.uv-cache/
+__pycache__/
+.cache/
+.DS_Store
