@@ -1,4 +1,4 @@
-site_name: 我的笔记本
+site_name: Griffindor 的笔记本
 site_url: https://griffindorr.github.io/profile/
 site_description: 个人技术笔记
 site_author: dongjian
@@ -199,4 +199,8 @@ nav:
       - cs/index.md
       - Rust:
           - 基础语法: cs/rust/basic.md
+      - 论文阅读:
+          - cs/paper_reading/index.md
+          - 视频生成: 
+              - 初期调研: cs/paper_reading/video_gen/initial_summary.md
   - 标签: tags.md
