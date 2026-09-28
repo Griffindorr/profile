@@ -7,14 +7,18 @@
    后面的系统字体兜底由 Material 自己提供，CDN 挂了也不会乱码。
 
    字体栈的设计意图（本地优先 + 线上兜底）：
-     1. "LXGW WenKai"        —— 本机已安装（~/Library/Fonts/LXGWWenKai-*.ttf）
-                                命中则零下载，本地预览瞬时渲染
-     2. "LXGW WenKai Screen" —— 上面没命中时（访客的机器）才去下载网络字体
-                                两个 family 渲染几乎一致，观感统一
-     3. 系统无衬线兜底       —— 网络字体也挂了时的最后防线
+     1. "霞鹜文楷"            —— 本机已安装（~/Library/Fonts/LXGWWenKai-*.ttf）
+                                 命中则零下载，本地预览瞬时渲染
+                                 ⚠️ 必须写中文 Family 名：系统里该字体的
+                                    Family = "霞鹜文楷"，而 "LXGW WenKai" 只是
+                                    Full Name，浏览器做本地匹配时不认，会直接跳过
+     2. "LXGW WenKai"         —— 其他平台（Windows/Linux）上 family 名可能是英文
+     3. "LXGW WenKai Screen"  —— 访客机器上没有这个字体时才去下载网络字体
+                                 与上面两者渲染几乎一致，观感统一
+     4. 系统无衬线兜底        —— 网络字体也挂了时的最后防线
    ========================================================================== */
 :root {
-  --md-text-font: "LXGW WenKai", "LXGW WenKai Screen", "PingFang SC",
+  --md-text-font: "霞鹜文楷", "LXGW WenKai", "LXGW WenKai Screen", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --md-code-font: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas,
     "Liberation Mono", monospace;
