@@ -11,18 +11,21 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: zh
+  font: false
+  favicon: assets/favicon.png
+  logo: assets/logo.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
-      accent: indigo
+      primary: brown
+      accent: brown
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: brown
+      accent: brown
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
@@ -93,8 +96,14 @@ extra_javascript:
   - https://unpkg.com/katex@0/dist/katex.min.js
   - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
 extra_css:
-  - css/custom.css
+  # 网络字体放在最前面，custom.css 放最后，保证我们的覆盖生效
+  # 只链 lxgwwenkaiscreen.css：官方的 style.css 会 @import 4 个文件，
+  # 其中 gbscreen* 两个与 screen* 定义了同一个 family（同 unicode-range），
+  # 按 CSS 规则被后者完全覆盖，属于无效负载，故直接单链生效的那个。
+  - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
+  - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
+  - css/custom.css
 
 validation:
   nav:
