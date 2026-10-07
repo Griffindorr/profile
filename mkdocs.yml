@@ -202,14 +202,14 @@ nav:
       - research/index.md
       - H100:
           - research/h100/index.md
-          - Asynchronicity and barriers: research/h100/asynchronicity_and_barriers.md
-          - cuTensorMap: research/h100/cuTensorMap.md
-          - cp.async.bulk: research/h100/cp_async_bulk.md
-          - WGMMA: research/h100/wgmma_1.md
-          - WGMMA( FP8 ): research/h100/wgmma_2.md
-          - 内存一致性模型: research/h100/memory_model.md
-          - GEMM 内核设计: research/h100/kernel_design.md
-          - Stream-K 调度: research/h100/stream_k.md
+          # - Asynchronicity and barriers: research/h100/asynchronicity_and_barriers.md
+          # - cuTensorMap: research/h100/cuTensorMap.md
+          # - cp.async.bulk: research/h100/cp_async_bulk.md
+          # - WGMMA: research/h100/wgmma_1.md
+          # - WGMMA( FP8 ): research/h100/wgmma_2.md
+          # - 内存一致性模型: research/h100/memory_model.md
+          # - GEMM 内核设计: research/h100/kernel_design.md
+          # - Stream-K 调度: research/h100/stream_k.md
       - 论文阅读:
           - research/paper_reading/index.md
           - 视频生成: 

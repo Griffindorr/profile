@@ -1,6 +1,7 @@
 # FlashGPU-sim: Enabling GPU Modeling for  Modern Architectures and AI Workloads
 
 论文链接：[《FlashGPU-sim: Enabling GPU Modeling for  Modern Architectures and AI Workloads》](https://arxiv.org/pdf/2609.15311)
+
 仓库链接：[FlashGPU-Sim](https://github.com/FlashGPU-Sim/FlashGPU-Sim)
 
 **BackGround**: 当前 NVIDIA 厂家在内的 GPU 底层硬件架构处于黑盒状态，无论是做软件 kernel 的性能调优还是硬件层面的优化，均需要一个良好（high fidelity）的模拟器来定量测试。目前已知的 GPU 模拟器（包括 GPGPU 等）均是面向 Amphere 及其之前的 GPU 架构设计的，对于 Hopper 与 Blackwell 架构中新添加的许多重要的硬件 mechanism 不予支持，需要新的模拟器来补齐这一差距。
