@@ -57,6 +57,9 @@
 :root {
   --code-radius: 0.3rem;        /* 代码块：6px */
   --code-radius-inline: 0.2rem; /* 行内 code：4px */
+  /* 代码行高。⚠️ 代码区和左侧行号列必须用同一个值，
+     否则数字会与代码行逐行错开（下面靠 var() 强制共用）。 */
+  --code-line-height: 1.714;
 }
 
 /* 行内 code */
@@ -90,6 +93,29 @@
   border-radius: 0 var(--code-radius) var(--code-radius) 0;
 }
 
+/* ⚠️ 上面两条把「行号/代码」那一行的【上两角】也圆了。
+   但 # 标题 + 行号 同时用时，DOM 是两行：
+       <tr><th class=filename>标题</th></tr>
+       <tr><td class=linenos><td class=code>…</td></tr>
+   此时第二行的上两角处在整块的「中间」，圆角会在拼接处露出两个小三角缺口。
+   下面用 :has() 选中「上一行含 filename」的那种情况，把上两角压平。
+
+   :has() 的兼容性：Chrome 105+ / Safari 15.4+ / Firefox 121+（2022–2023 起全绿）。
+   万一遇到不支持的浏览器，唯一后果就是留个小缺口，不影响功能。 */
+.md-typeset .highlighttable > tbody > tr:has(> th.filename) + tr > td.linenos,
+.md-typeset
+  .highlighttable
+  > tbody
+  > tr:has(> th.filename)
+  + tr
+  > td.code
+  > div
+  > pre
+  > code {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 /* 右上角"复制"按钮的悬浮底板，跟行内 code 用同一档 */
 .md-code__nav {
   border-radius: var(--code-radius-inline);
@@ -107,42 +133,117 @@
 }
 
 /* ==========================================================================
-   中文排版
-   Material 的行高 1.6 是按西文调的；中文方块字需要更松的行距才不挤。
-   1rem = 20px（Material 把 html 设为 font-size:125%），所以：
-     1.75 行高 ≈ 28px      0.8rem ≈ 16px
+   正文排版 —— 对齐 Markdown Preview Enhanced 的 newsprint.css
+   --------------------------------------------------------------------------
+   MPE（VSCode 的 Markdown Preview Enhanced）用的预览主题是 newsprint.css，
+   基准字号 16px，与本站 .md-typeset 的 0.8rem = 16px 完全一致，
+   所以它的 em 值可以原样搬过来，px 结果一模一样。
+
+   ⚠️ 两处做了本地化适配，不是照抄：
+     1. 字重：newsprint 的 h2/h4/h5/h6 是 700，但本机霞鹜文楷只有
+        300/400/500 三档，写 700 会触发浏览器合成粗体（边缘发毛）。
+        所以统一降一档映射到 500；h1 和 h3 本来就是 400，保持。
+     2. 颜色：newsprint 是冷灰+蓝的色系（链接 #065588、代码底 #dadada），
+        与本站暖棕主题冲突。所以只搬「度量」（字号/行高/间距/边框粗细），
+        颜色一律沿用主题变量。
    ========================================================================== */
+
+/* 正文行高 1.5（MPE: body{line-height:1.5em}） */
 .md-typeset {
-  line-height: 1.75;
+  line-height: 1.5;
 }
 
-/* 段落之间留一点呼吸，但不要像 Material 默认那样把列表项也撑开 */
+/* 段落：底部 1.5em（MPE: p{margin-bottom:1.5em}） */
 .md-typeset p {
-  margin: 0.9em 0;
+  margin: 0 0 1.5em;
 }
 
-/* 列表项之间也稍微松一点（中文笔记里长列表很常见） */
-.md-typeset li + li {
-  margin-top: 0.25em;
+/* ---- 标题 ---- */
+
+/* h1：1.875em = 30px，细体、行高 1.3、底部一条横线（newsprint 的标志性处理） */
+.md-typeset h1 {
+  font-size: 1.875em;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 2em 0 0.5em;
+  padding-bottom: 0.8125em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
 }
 
-/* 标题字重改用 500：
-   本机霞鹜文楷只有 300/400/500 三档、没有 700，写 700 会由浏览器
-   合成假粗体（边缘发毛）。显式指定 500 会直接命中 Medium 字重，更干净。 */
-.md-typeset h1,
+/* h2/h3：1.3125em = 21px、行高 1.15、上边距 2.285714em */
 .md-typeset h2,
-.md-typeset h3,
-.md-typeset h4,
+.md-typeset h3 {
+  font-size: 1.3125em;
+  line-height: 1.15;
+  font-weight: 500; /* newsprint 是 700 → 本地化到 500 */
+  margin: 2.285714em 0 0.75em;
+}
+
+/* h3 在 newsprint 里是正体，不加粗 */
+.md-typeset h3 {
+  font-weight: 400;
+}
+
+/* h4：1.125em = 18px */
+.md-typeset h4 {
+  font-size: 1.125em;
+  font-weight: 500;
+  margin: 2.67em 0 1.5em;
+}
+
+/* h5/h6：1em = 16px，与正文同号 */
 .md-typeset h5,
-.md-typeset h6,
+.md-typeset h6 {
+  font-size: 1em;
+  font-weight: 500;
+  margin: 1.5em 0 1.5em;
+}
+
+/* 表格表头 / 定义列表术语，跟标题一个逻辑（避开合成粗体） */
 .md-typeset th,
 .md-typeset dt {
   font-weight: 500;
 }
 
-/* 正文里的粗体同理 */
+/* 正文粗体同理 */
 .md-typeset strong {
   font-weight: 500;
+}
+
+/* ---- 列表 ---- */
+/* MPE: ol,ul{margin:0 0 1.5em 1.5em}；段落紧跟列表时用 -1em 收紧 */
+.md-typeset ul,
+.md-typeset ol {
+  margin: 0 0 1.5em 1.5em;
+}
+
+.md-typeset p + ul,
+.md-typeset p + ol {
+  margin-top: -1em;
+}
+
+/* 列表项【之间】的间距：MPE newsprint 完全不设，只靠行高（1.5 × 16px = 24px）。
+   Material 默认是 li{margin-bottom:.5em}，之前我又额外加了 li+li{margin-top:.25em}，
+   合计 12px —— 与 newsprint 不符，这里一起清零。
+   （若觉得太挤，把下面这条删掉即可回到 Material 的 .5em） */
+.md-typeset ol li,
+.md-typeset ul li {
+  margin-bottom: 0;
+}
+
+/* 列表项【内部】的段落也不带边距（MPE: li>p{margin:0}）。
+   需与 Material 的 `.md-typeset ul li p` 同优先级才能覆盖，所以带上 ul/ol。 */
+.md-typeset ul li > p,
+.md-typeset ol li > p {
+  margin: 0;
+}
+
+/* ---- 分隔线 ---- */
+.md-typeset hr {
+  border-top: none;
+  border-right: none;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+  border-left: none;
 }
 
 /* ==========================================================================
@@ -154,12 +255,42 @@
   overflow: hidden; /* 让圆角能裁住表头的背景色 */
 }
 
+/* 字号：12.8px → 16px（对齐 MPE newsprint 的 table{font-size:1em}）
+   Material 默认把表格压到 .64rem = 12.8px，比正文小一大截，长表格读起来吃力。
+   newsprint 让表格与正文同号。 */
+.md-typeset table:not([class]) {
+  font-size: 1em;
+}
+
+/* ⚠️ 必须同时收紧单元格内边距。
+   Material 的 padding 是 .9375em 1.25em，单位是 em —— 字号一变大会跟着放大。
+   12.8px 时是 12px / 16px；提到 16px 后就变成 15px / 20px，
+   7 列的表仅内边距就要占 7 × 40 = 280px，表格会被挤到必须横向滚动。
+   newsprint 的 padding 是 .25em .25em .25em .4em（相当紧），这里取中间偏紧的值。 */
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.5em 0.75em;
+}
+
+/* 表头左对齐（MPE: th{text-align:left}）。
+   Markdown 里用 |:---:| 显式指定对齐方式的表格不受影响（内联样式优先）。
+   ⚠️ 表头和斑马纹原来是【同一个颜色】(--md-default-fg-color--lightest, 12% 透明度)，
+   结果表头完全淹没在条纹里。现在把两者拉开：
+     表头   = 主色淡染 30%  → 暖棕，明显
+     斑马纹 = 前景色 5%     → 只做行与行的轻微区分
+   想调浓淡只动下面这两个变量。 */
+:root {
+  --table-head-bg: color-mix(in srgb, var(--md-primary-fg-color) 30%, transparent);
+  --table-stripe-bg: color-mix(in srgb, var(--md-default-fg-color) 5%, transparent);
+}
+
 .md-typeset table:not([class]) th {
-  background-color: var(--md-default-fg-color--lightest);
+  background-color: var(--table-head-bg);
+  text-align: left;
 }
 
 .md-typeset table:not([class]) tr:nth-child(2n) {
-  background-color: var(--md-default-fg-color--lightest);
+  background-color: var(--table-stripe-bg);
 }
 
 /* 悬停整行高亮，方便横向读数 */
@@ -168,14 +299,80 @@
 }
 
 /* ==========================================================================
-   引用块
-   默认只是一条灰竖线，加上主色竖线 + 极淡底色，更像"引文"
+   引用块（MPE newsprint 的斜体 + 左边框 + 淡底）
+   ⚠️ 缩进去掉了：newsprint 原本是 margin-left: 2em（让引文往右缩），
+   但那会让引用块的左边框与正文左边缘错开 32px，看起来像没对齐。
+   去掉后左边框与正文对齐，靠 5px 竖线 + 淡底做区分。
    ========================================================================== */
 .md-typeset blockquote {
-  border-left-color: var(--md-primary-fg-color);
+  font-style: italic;
+  border-left: 5px solid var(--md-default-fg-color--lighter);
   border-radius: 0 var(--code-radius) var(--code-radius) 0;
   background-color: var(--md-default-fg-color--lightest);
-  padding: 0.1rem 0 0.1rem 0.9rem;
+  color: var(--md-default-fg-color--light);
+  margin: 0 0 1.5em 0;
+  padding: 0.6em 0 0.6em 1em;
+}
+
+/* ⚠️ 必须清掉引用块内最后一个元素的尾边距。
+   普通情况下 <p> 的 margin-bottom 会"折叠"到父元素外面，看不出来；
+   但引用块有 padding-bottom（0.6em），折叠被挡住，那 1.5em = 24px 的边距
+   就留在背景内部 —— 恰好是一整行的高度，视觉上就是"文字下面多空了一行"。 */
+.md-typeset blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   提示框（admonition / details）上下留白对称
+   --------------------------------------------------------------------------
+   Material 的提示框天生上下不等：
+     上 = 标题条的 padding-top            .4rem = 8px
+     下 = 最后一个子元素的 margin-bottom   .6rem = 12px
+   实测截图里上方留白 20px、下方 32px（同一缩放比下），文字中心偏上约 5px。
+
+   只把下边距从 .6rem 改成 .4rem 还不够 —— 视觉留白里还包含 line box 的
+   半行距（标题和正文各约 4.8px），所以改成「按构造对称」：
+     盒子上方 = 标题 padding-top   .4rem
+     盒子下方 = 盒子 padding-bottom .4rem
+     末元素边距清零，避免和 padding 叠加
+   这样上下两侧各自都只有「padding + 半行距」，必然对称。
+
+   ⚠️ 必须带 html 前缀：Material 用的是
+      html .md-typeset .admonition>:last-child   （优先级 0,3,1）
+   要覆盖它，选择器优先级至少得持平，所以照抄它的写法。
+   ========================================================================== */
+html .md-typeset .admonition,
+html .md-typeset details {
+  /* 上 0.1rem（2px）是给左侧图标的补偿：
+     图标比标题文字高出约 4px，所以盒子上留白要比下留白小 2px，
+     上下"墨迹到边框"的距离才相等。这个值是按截图实测校准出来的，
+     不是拍的 —— 若以后改了图标尺寸或标题字号，需要重新校。 */
+  padding: 0.1rem 0.6rem 0.4rem;
+}
+
+html .md-typeset .admonition > :last-child,
+html .md-typeset details > :last-child {
+  margin-bottom: 0;
+}
+
+/* 提示框内：标题 → 正文之间补一点间距。
+   全局的 .md-typeset p{margin: 0 0 1.5em} 把 Material 原本的 1em 上边距清掉了，
+   导致正文紧贴标题条（只剩标题自身的 padding-bottom 8px），视觉上像"文字被顶上去了"。 */
+.md-typeset .admonition-title + p,
+.md-typeset summary + p {
+  margin-top: 0.5em;
+}
+
+/* ⚠️ 上面那条只覆盖了 <p>，标题后面如果直接跟列表就漏掉了：
+   全局的 .md-typeset ul{margin: 0 0 1.5em 1.5em} 同样把上边距清成 0，
+   于是 <ul> 的第一行会直接压在标题条上（Material 的盒子本身纵向 padding 也是 0，
+   只有我们下面校准过的 0.1rem/0.4rem，兜不住这个缺口）。
+   这里把 ul/ol 一起补上，间距与段落保持一致。 */
+.md-typeset .admonition-title + ul,
+.md-typeset .admonition-title + ol,
+.md-typeset summary + ul,
+.md-typeset summary + ol {
+  margin-top: 0.5em;
 }
 
 /* ==========================================================================
@@ -322,4 +519,88 @@
   border-color: transparent;
   color: var(--md-primary-fg-color);
 }
+
+/* ==========================================================================
+   代码块语法着色（暖色系）
+   --------------------------------------------------------------------------
+   Material 把语法着色拆成了 12 个变量，默认配色偏冷：
+     浅色 keyword #3f6ec6 / function #a846b9 / constant #6e59d9
+     深色 keyword #6791e0 / function #c973d9 / constant #9383e2
+   定义位置：浅色在 main.css 的 :root,[data-md-color-scheme=default]，
+             深色在 palette.css 的 [data-md-color-scheme=slate]（包在 @media screen 里）。
+   两者优先级相同，custom.css 最后加载，所以直接覆盖即可。
+
+   ⚠️ 只覆盖 6 个"有彩色"的变量。
+   name / operator / punctuation / comment / variable / generic 这 6 个
+   默认取的是 var(--md-default-fg-color--light) 这类语义色，
+   会自动适配深浅两套主题，不该写死。
+   ========================================================================== */
+
+/* 浅色模式：暖棕 + 赭石 + 橄榄 */
+:root,
+[data-md-color-scheme="default"] {
+  --md-code-hl-color: #795649; /* 高亮行 */
+  --md-code-hl-color--light: rgba(121, 86, 73, 0.12);
+
+  --md-code-hl-keyword-color: #a03c1e; /* 关键字：砖红 */
+  --md-code-hl-string-color: #5c7a29; /* 字符串：橄榄绿 */
+  --md-code-hl-number-color: #b3541e; /* 数字：赭石 */
+  --md-code-hl-function-color: #8a4b2a; /* 函数：深棕 */
+  --md-code-hl-constant-color: #8f6b3f; /* 常量：卡其 */
+  --md-code-hl-special-color: #b03a4a; /* 特殊：枣红 */
+}
+
+/* 深色模式：同样色相，提亮以保证对比度 */
+[data-md-color-scheme="slate"] {
+  --md-code-hl-color: #c9a227;
+  --md-code-hl-color--light: rgba(201, 162, 39, 0.15);
+
+  --md-code-hl-keyword-color: #e89a63;
+  --md-code-hl-string-color: #b9cd8b;
+  --md-code-hl-number-color: #f2b17a;
+  --md-code-hl-function-color: #e0b083;
+  --md-code-hl-constant-color: #d9b98a;
+  --md-code-hl-special-color: #ec8fa0;
+}
+
+/* 高亮行：用主色淡染（Material 默认是蓝底 + 左侧蓝条） */
+.md-typeset .hll {
+  background-color: var(--md-code-hl-color--light);
+  box-shadow: 2px 0 0 0 var(--md-code-hl-color);
+}
+
+/* 行号列：弱化，别和正文抢视线（默认与代码同色） */
+.md-typeset .linenos {
+  color: var(--md-default-fg-color--lighter);
+}
+
+/* 代码块正文：行高与字号对齐 MPE newsprint
+   MPE: code,pre,tt{font-size:.875em;line-height:1.714285em}
+   → 0.875em = 14px（Material 默认 .85em = 13.6px）
+   → 行高 1.714 × 14px ≈ 24px
+   只给 code 设字号，不设 pre —— 否则 pre > code 会叠乘成 0.875 × 0.875。 */
+.md-typeset code,
+.md-typeset tt {
+  font-size: 0.875em;
+}
+
+.md-typeset .linenos {
+  font-size: 0.875em;
+}
+
+/* ⚠️ 行高必须同时给【代码区】和【左侧行号列】设置，且用同一个变量。
+   Material 只给代码区设了行高，行号列是继承 .md-typeset 的 —— 两边一旦不一致，
+   每行就错开几个像素，累积几十行后数字会明显偏离代码行（看起来像"某些行没有行号"）。 */
+.md-typeset .highlight pre > code,
+.md-content__inner > pre > code,
+.md-typeset .linenodiv pre {
+  line-height: var(--code-line-height);
+}
+
+.md-typeset .highlight pre > code,
+.md-content__inner > pre > code {
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
 
