@@ -20,7 +20,10 @@
 
 ## 1.1 对 TMA 的建模
 
-<img src="./graphs/tma_model.png">
+<figure markdown>
+  ![DiT 架构图](graphs/tma_model.png){ width="500" }
+  <figcaption>对 TMA pipeline 的建模</figcaption>
+</figure>
 
 TMA 是单个 SM 独有，四个 sub-partion 共享。单个 `cp.async.bulk` 指令作为一个 TMA Transaction，传输的数据量是变长的，需要拆分为若干个等长的 request 一个一个 issue. 这里 descriptor cache 就是从 global memory 加载到 shared memory 的 cuTensorMap，提高重复访问的效率。注意，普通的 `cp.async.bulk` 不需要 cuTensorMap，只有 `cp.async.bulk.tensor` 才需要。
 
@@ -32,7 +35,10 @@ TMA 是单个 SM 独有，四个 sub-partion 共享。单个 `cp.async.bulk` 指
 
 比如，对于 transaction cache 容量，benchmark 测试结果为：
 
-<img src="./graphs/slots.png">
+<figure markdown>
+  ![DiT 架构图](graphs/slots.png){ width="500" }
+  <figcaption>Transaction Cache 容量测试曲线</figcaption>
+</figure>
 
 除了 transaction cache 容量，还测试：
 
@@ -95,7 +101,10 @@ where $f$ is the SM clock frequency in $\mathrm{GHz}$. Since each SM contains $P
 
 根据 NVIDIA DSMEM patent 构建的模型如图：
 
-<img src="./graphs/dsmem.png">
+<figure markdown>
+  ![DiT 架构图](graphs/dsmem.png){ width="500" }
+  <figcaption>Distributed Shared Memory 建模</figcaption>
+</figure>
 
 SM 的组织层次也比较清楚了，两个 SM 组成一个 TPC( Texture Processing Unit )，三个 TPC 组成一个 CPC( Compute Processing Unit )，三个 CPC 组成一个 GPC( Graphic Processing Unit ). 所以一个满配的 GPC 包含 $18$ 个 SM.
 
