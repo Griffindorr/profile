@@ -4,3 +4,10 @@ site/
 __pycache__/
 .cache/
 .DS_Store
+record.md
+
+# VSCode 的本地配置目录。
+# op_devtools 插件会在这里生成 .env（整个 shell 环境变量的转储，含用户名/路径）
+# 和 devtool_config.json —— 属于本机私有数据，不该进仓库。
+# 现在没发现凭据，但把环境快照推到公开仓库本身就是不必要的暴露。
+.vscode/

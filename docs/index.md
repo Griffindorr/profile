@@ -18,7 +18,7 @@
 
     GPU 异步执行、TMA、屏障与底层编程
 
-    [:octicons-arrow-right-24: 进入](cs/h100/index.md)
+    [:octicons-arrow-right-24: 进入](research/h100/index.md)
 
 </div>
 

@@ -121,6 +121,9 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.highlight:
       anchor_linenums: true
+      # 行号放进独立的表格列：这样鼠标选中代码复制时不会把行号一起带走
+      # （默认的 inline 模式会把行号混进代码里，粘到编辑器直接报错）
+      linenums_style: table
   - pymdownx.snippets
   - pymdownx.keys
   - pymdownx.mark
@@ -150,7 +153,7 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
-  - css/custom.css?v=7
+  - css/custom.css?v=19
 
 validation:
   nav:
@@ -195,13 +198,25 @@ nav:
       - index.md
   - 博客:
       - blog/index.md
+  - Research:
+      - research/index.md
+      - H100:
+          - research/h100/index.md
+          - Asynchronicity and barriers: research/h100/asynchronicity_and_barriers.md
+          - cuTensorMap: research/h100/cuTensorMap.md
+          - cp.async.bulk: research/h100/cp_async_bulk.md
+          - WGMMA: research/h100/wgmma_1.md
+          - WGMMA( FP8 ): research/h100/wgmma_2.md
+          - 内存一致性模型: research/h100/memory_model.md
+          - GEMM 内核设计: research/h100/kernel_design.md
+          - Stream-K 调度: research/h100/stream_k.md
+      - 论文阅读:
+          - research/paper_reading/index.md
+          - 视频生成: 
+              - 初期调研: research/paper_reading/video_gen/initial_summary.md
+          - GPU 建模:
+              - FlashGPU-Sim: research/paper_reading/gpu-sim/FlashGPU-Sim.md
+
   - Computer Science:
       - cs/index.md
-      - H100:
-          - cs/h100/index.md
-          - Asynchronicity and barriers: cs/h100/asynchronicity_and_barriers.md
-      - 论文阅读:
-          - cs/paper_reading/index.md
-          - 视频生成: 
-              - 初期调研: cs/paper_reading/video_gen/initial_summary.md
   - 标签: tags.md
