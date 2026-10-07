@@ -30,7 +30,7 @@ TMA 是单个 SM 独有，四个 sub-partion 共享。单个 `cp.async.bulk` 指
 在做 benchmark 的时候可以学习一下：
 
 - independent operation chain 可以测量单个 operation 的 issue gap;
-- dependent operation chain 可以测量单个 operation 的 latency.
+- dependent operation chain 可以测量单个 operation 的 latency;
 - 如果有 transaction cache 或者 issue slot 这样的有限结构，可以由单个 warp 连续 issue 或者多个 warp 同时 issue，测量 cache 或者 slot 的容量（最好要使单个 operation 时间稍微长一点，始终处于 in-flight 的状态）。
 
 比如，对于 transaction cache 容量，benchmark 测试结果为：
@@ -47,10 +47,13 @@ TMA 是单个 SM 独有，四个 sub-partion 共享。单个 `cp.async.bulk` 指
 - 处理越界数据的方法：for write，不会产生 request；for read，request 最多到达 L2 Cache，不会到 DRAM.
 
 文章中提到 Little's Law（利特尔法则）基本原理，一个稳定系统中：
+
 \[
 L=\lambda W
 \]
+
 其中：
+
 - \(L\)：系统中平均同时存在的任务数量；
 - \(\lambda\)：平均到达或完成速率；
 - \(W\)：每个任务在系统中停留的平均时间。
