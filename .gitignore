@@ -6,6 +6,14 @@ __pycache__/
 .DS_Store
 record.md
 
+# H100 笔记（10 篇）：暂时不公开。
+# 两道防线各管一头，缺一不可：
+#   ① 这里 → 不进【公开仓库】（GitHub 上搜不到）
+#   ② mkdocs.yml 的 exclude_docs → 不上【站点】
+# 想恢复发布：删掉这一行 + mkdocs.yml 里的 exclude_docs 和 nav 注释，
+# 再把 docs/research/index.md 与 docs/index.md 的入口加回来。
+docs/research/h100/
+
 # VSCode 的本地配置目录。
 # op_devtools 插件会在这里生成 .env（整个 shell 环境变量的转储，含用户名/路径）
 # 和 devtool_config.json —— 属于本机私有数据，不该进仓库。

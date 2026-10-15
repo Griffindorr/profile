@@ -12,6 +12,10 @@
 
     [:octicons-arrow-right-24: 进入](cs/index.md)
 
+<!-- NVIDIA H100 卡片暂时隐藏：
+     恢复时把下面这张卡片取消注释，并同步改 mkdocs.yml 的 exclude_docs 和 nav，
+     以及 docs/research/index.md 的入口。
+
 -   :material-chip:{ .lg .middle } __NVIDIA H100__
 
     ---
@@ -19,6 +23,7 @@
     GPU 异步执行、TMA、屏障与底层编程
 
     [:octicons-arrow-right-24: 进入](research/h100/index.md)
+-->
 
 </div>
 

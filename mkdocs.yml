@@ -11,55 +11,39 @@ edit_uri: edit/main/docs/
 theme:
   name: material
   language: zh
+  # 字体：仍然用自定义的霞鹜文楷 + JetBrains Mono（见 extra_css），
+  # 所以这里关掉 Material 自带的 Roboto 加载。
   font: false
-  # 自定义模板目录：首页 hero 横幅 + giscus 评论位
-  custom_dir: overrides
   # ⚠️ 换图后必须把 ?v= 的数字 +1
   # GitHub Pages 对这些文件设了 cache-control: max-age=600，且文件名不变的话
   # 浏览器会直接用缓存里的旧图、根本不去下载。改 URL 才能强制刷新。
   favicon: assets/favicon.png?v=2
   logo: assets/logo.png?v=2
+  # 明暗切换：默认跟随系统偏好，右上角按钮可手动覆盖。
+  # 配色用 Material 默认的 indigo —— 【不是】之前那套 brown + deep orange。
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: brown
-      accent: brown
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: brown
-      # 深色模式下棕色作强调色的对比度太低（链接会看不清），
-      # 换一个同样是暖色但更亮的，保证可读性
-      accent: deep orange
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
+  # features：只开了 toc.integrate —— 把页面目录从【右侧】移进【左侧】导航栏。
+  # 其余 21 项仍为出厂默认（已移除），备份在 .cache/theme-backup-*/mkdocs.yml。
+  # 想让目录在滚动时自动跟着高亮，可以再补一行 toc.follow。
   features:
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.instant.prefetch
-    - navigation.tracking
-    - navigation.tabs
-    - navigation.sections
-    - navigation.indexes
-    - navigation.top
-    - navigation.footer
-    - navigation.path
-    - toc.follow
     - toc.integrate
-    - header.autohide
-    - search.suggest
-    - search.highlight
-    - search.share
-    - content.code.copy
-    - content.code.select
-    - content.code.annotate
-    - content.tabs.link
-    - content.action.edit
-    - content.action.view
-    - content.footnote.tooltips
+  #
+  # 注意：overrides/ 目录还在，但已不再被 custom_dir 引用 ——
+  # 首页 hero 横幅和 giscus 评论位随之失效。要恢复就加回 custom_dir: overrides。
 
 plugins:
   - search:
@@ -193,6 +177,12 @@ extra:
     mapping: pathname
     theme: preferred_color_scheme
 
+# ⚠️ 从站点上【完全隐藏】的目录：不构建、不进 sitemap、URL 也不存在。
+# glob 语法，每行一条。恢复时把这里对应的行删掉 —— 但要连同 nav 里的注释
+# 和两个 index 页的入口一起改，三处缺一个就会死链或构建失败。
+exclude_docs: |
+  research/h100/
+
 nav:
   - 首页:
       - index.md
@@ -200,22 +190,31 @@ nav:
       - blog/index.md
   - Research:
       - research/index.md
-      - H100:
-          - research/h100/index.md
-          # - Asynchronicity and barriers: research/h100/asynchronicity_and_barriers.md
-          # - cuTensorMap: research/h100/cuTensorMap.md
-          # - cp.async.bulk: research/h100/cp_async_bulk.md
-          # - WGMMA: research/h100/wgmma_1.md
-          # - WGMMA( FP8 ): research/h100/wgmma_2.md
-          # - 内存一致性模型: research/h100/memory_model.md
-          # - GEMM 内核设计: research/h100/kernel_design.md
-          # - Stream-K 调度: research/h100/stream_k.md
+      # ⚠️ H100 板块【暂时隐藏】。文件仍在 docs/research/h100/，只是不发布。
+      #
+      # 恢复三步（缺一不可）：
+      #   ① 删掉本文件上方 exclude_docs 里的 research/h100/ 那一行
+      #   ② 取消下面几行的注释
+      #   ③ 把 docs/research/index.md 和 docs/index.md 里的入口加回来
+      #
+      # - H100:
+      #     - research/h100/index.md
+      #     - Asynchronicity and barriers: research/h100/asynchronicity_and_barriers.md
+      #     - cuTensorMap: research/h100/cuTensorMap.md
+      #     - cp.async.bulk: research/h100/cp_async_bulk.md
+      #     - WGMMA: research/h100/wgmma_1.md
+      #     - WGMMA( FP8 ): research/h100/wgmma_2.md
+      #     - 内存一致性模型: research/h100/memory_model.md
+      #     - GEMM 内核设计: research/h100/kernel_design.md
+      #     - Stream-K 调度: research/h100/stream_k.md
       - 论文阅读:
           - research/paper_reading/index.md
           - 视频生成: 
               - 初期调研: research/paper_reading/video_gen/initial_summary.md
           - GPU 建模:
               - FlashGPU-Sim: research/paper_reading/gpu-sim/FlashGPU-Sim.md
+          - GPU 测试:
+              - H100 存储系统测试: research/paper_reading/gpu-bench/report.md
 
   - Computer Science:
       - cs/index.md
