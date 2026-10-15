@@ -20,7 +20,7 @@
 
 ## 1.1 对 TMA 的建模
 
-<figure markdown>
+<figure markdown id="fig-tma-model">
   ![DiT 架构图](graphs/tma_model.png){ width="500" }
   <figcaption>对 TMA pipeline 的建模</figcaption>
 </figure>
@@ -35,7 +35,7 @@ TMA 是单个 SM 独有，四个 sub-partion 共享。单个 `cp.async.bulk` 指
 
 比如，对于 transaction cache 容量，benchmark 测试结果为：
 
-<figure markdown>
+<figure markdown id="fig-slots">
   ![DiT 架构图](graphs/slots.png){ width="500" }
   <figcaption>Transaction Cache 容量测试曲线</figcaption>
 </figure>
@@ -104,7 +104,7 @@ where $f$ is the SM clock frequency in $\mathrm{GHz}$. Since each SM contains $P
 
 根据 NVIDIA DSMEM patent 构建的模型如图：
 
-<figure markdown>
+<figure markdown id="fig-dsmem">
   ![DiT 架构图](graphs/dsmem.png){ width="500" }
   <figcaption>Distributed Shared Memory 建模</figcaption>
 </figure>

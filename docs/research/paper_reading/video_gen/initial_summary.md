@@ -6,7 +6,7 @@ DiT 是当前图像生成和视频生成的主流架构，DiT 本身衍生出非
 
 DiT 原始论文：《Scalable Diffusion Models with Transformers》（ICCV 2023）. 
 
-<figure markdown>
+<figure markdown id="fig-stable-diffusion">
   ![DiT 架构图](graphs/stable_diffusion.png){ width="500" }
   <figcaption>DiT 架构：左侧是 Latent Diffusion Transformer 的整体流程，右侧是带 adaN-Zero 的 DiT Block 内部结构</figcaption>
 </figure>
