@@ -52,33 +52,12 @@ plugins:
   # 索引页由 nav 里的 tags.md + 页面内的 <!-- material/tags --> 标记生成
   # （tags_file 选项在 9.7 已弃用，不再需要）
   - material/tags
-  # 博客：带日期的文章流（docs/blog/posts/*.md）
-  - material/blog:
-      blog_dir: blog
-      post_dir: "{blog}/posts"
-      archive: true
-      categories: true
   - glightbox
   - git-revision-date-localized:
       type: date
       timezone: Asia/Shanghai
       locale: zh
       fallback_to_build_date: true
-      # blog/index.md 是 blog 插件生成的虚拟页面，磁盘上没有这个文件，
-      # git log 查不到它会发 warning，而 --strict 会把 warning 当错误
-      exclude:
-        - blog/index.md
-  # RSS 订阅源，日期取页面的 date 元数据
-  - rss:
-      date_from_meta:
-        as_creation: date.created
-        as_update: date.updated
-      categories:
-        - categories
-        - tags
-      use_material_blog: true
-      # 关掉 git 取日期：blog 生成的临时页面不在仓库里，会刷一屏 INFO 噪音
-      use_git: false
   # HTML/CSS/JS 压缩。
   # ⚠️ 别把这条换成 material/optimize —— 名字容易误会，它只压【图片】，
   # 不碰 CSS/JS。而且它需要额外依赖：PNG 要系统命令 pngquant，
@@ -158,9 +137,6 @@ extra:
     - icon: fontawesome/solid/envelope
       link: mailto:jiandong356@gmail.com
       name: 邮件
-    - icon: fontawesome/solid/rss
-      link: https://griffindorr.github.io/profile/feed_rss_created.xml
-      name: RSS 订阅
     - icon: fontawesome/solid/house
       link: https://griffindorr.github.io/profile/
       name: 本站
@@ -186,8 +162,6 @@ exclude_docs: |
 nav:
   - 首页:
       - index.md
-  - 博客:
-      - blog/index.md
   - Research:
       - research/index.md
       # ⚠️ H100 板块【暂时隐藏】。文件仍在 docs/research/h100/，只是不发布。
