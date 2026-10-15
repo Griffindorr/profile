@@ -48,10 +48,6 @@ theme:
 plugins:
   - search:
       lang: zh
-  # 标签：页面 front matter 里写 tags: [a, b]。
-  # 索引页由 nav 里的 tags.md + 页面内的 <!-- material/tags --> 标记生成
-  # （tags_file 选项在 9.7 已弃用，不再需要）
-  - material/tags
   - glightbox
   - git-revision-date-localized:
       type: date
@@ -192,4 +188,3 @@ nav:
 
   - Computer Science:
       - cs/index.md
-  - 标签: tags.md
