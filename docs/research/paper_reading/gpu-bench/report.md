@@ -337,7 +337,7 @@ TMA 的发射槽有 $8$ 个，可以验证一下。虽然 `cp.async.bulk` 作为
 2. 图二是 cluster 中最早接收数据的 rank 完全接收数据的时间，其实就是从 rank0 开始 issue 到第一个 transaction 结束的时间。很自然地，这段延迟与 $N$ 没有关系，只是关于 chunk size 线性增长。
 3. 图三是 cluster 中最晚接收数据的 rank 完全接收数据的时间，其实就是从 rank0 开始 issue 到最后一个 transaction 结束的时间。基于前面【transaction 处理过程是串行的】结论，我们可以建模，令 $C$ 为 transfer size，$N$ 为 transaction 的数量，$A$ 为数据传输速率，则这里的延迟即为 $A\times N\times C$，关于 transfer size 和 $N$ 都是线性变化的。
 
-#### 2.5.3 多对一数据传输
+#### 2.5.3 多对一数据搬运
 
 测试完 fan-out，再来观察一下 fan-in 的情况。与 fan-out 相反，fan-in 是【多对一】的形式，在一个 cluster 内，rank0 是各个 TMA transaction 的目的地，剩下的所有 rank 都是 TMA transaction 的源，由各个源同时向 rank0 push 数据，观察一下总的时间开销情况。测试结果如下：
 
