@@ -183,8 +183,8 @@ nav:
               - 初期调研: research/paper_reading/video_gen/initial_summary.md
           - GPU 建模:
               - FlashGPU-Sim: research/paper_reading/gpu-sim/FlashGPU-Sim.md
-          - GPU 测试:
-              - H100 存储系统测试: research/paper_reading/gpu-bench/report.md
+      - GPU 测试:
+          - H100 存储系统测试: research/gpu-bench/report.md
 
   - Computer Science:
       - cs/index.md
