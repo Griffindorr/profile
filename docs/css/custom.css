@@ -584,4 +584,15 @@ html .md-typeset details > :last-child {
   -moz-tab-size: 4;
 }
 
+/* ==========================================================================
+   页头 logo 做成圆形头像
+   Material 默认只给 .md-logo img 设了 height:1.2rem; width:auto ——
+   方图会原样显示成小方块。这里补一个圆形裁切，让它看起来像头像。
+   （原图是方形照片，裁成圆之后更自然；换回 logo.png 那种符号图也能用。）
+   ========================================================================== */
+.md-header__button.md-logo img {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 
