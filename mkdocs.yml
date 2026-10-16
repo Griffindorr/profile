@@ -18,7 +18,10 @@ theme:
   # GitHub Pages 对这些文件设了 cache-control: max-age=600，且文件名不变的话
   # 浏览器会直接用缓存里的旧图、根本不去下载。改 URL 才能强制刷新。
   favicon: assets/favicon.png?v=2
-  logo: assets/logo.png?v=2
+  # 页头左侧的圆形头像 —— 取的是 GitHub 账号 Griffindorr 的头像
+  # （https://github.com/Griffindorr.png）。原图是 Deathly Hallows 的 logo.png，
+  # 仍留在 docs/assets/ 里，要换回去把下面这行改成 assets/logo.png?v=3 即可。
+  logo: assets/avatar.jpg?v=1
   # 明暗切换：默认跟随系统偏好，右上角按钮可手动覆盖。
   # 配色用 Material 默认的 indigo —— 【不是】之前那套 brown + deep orange。
   palette:
@@ -36,10 +39,13 @@ theme:
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
-  # features：只开了 toc.integrate —— 把页面目录从【右侧】移进【左侧】导航栏。
-  # 其余 21 项仍为出厂默认（已移除），备份在 .cache/theme-backup-*/mkdocs.yml。
+  # features：
+  #   navigation.tabs  —— 顶层板块（首页 / Research / Computer Science）横向排在页头下方
+  #   toc.integrate    —— 页面目录从【右侧】移进【左侧】导航栏
+  # 其余 20 项仍为出厂默认（已移除），备份在 .cache/theme-backup-*/mkdocs.yml。
   # 想让目录在滚动时自动跟着高亮，可以再补一行 toc.follow。
   features:
+    - navigation.tabs
     - toc.integrate
   #
   # 注意：overrides/ 目录还在，但已不再被 custom_dir 引用 ——
@@ -112,7 +118,8 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
-  - css/custom.css?v=19
+  # ⚠️ 改过 custom.css 就把 ?v= 的数字 +1，否则浏览器会用缓存里的旧样式。
+  - css/custom.css?v=20
 
 validation:
   nav:
