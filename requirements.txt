@@ -7,3 +7,10 @@ mkdocs-glightbox==0.5.2
 mkdocs-git-revision-date-localized-plugin==1.6.0
 mkdocs-rss-plugin==1.19.0
 mkdocs-minify-plugin==0.8.0
+
+# ⚠️ selectolax 必须钉在 0.4.x —— 这是踩过的坑：
+# mkdocs-glightbox 0.5.2 用 selectolax 解析 HTML，把 <img> 包进 <a class="glightbox">。
+# selectolax 1.0 是重写版，gl-lightbox 0.5.2 在它上面【静默丢图】——
+# 构建不报错，但页面上所有正文 <img> 都变成空的 <p> </p>，图片全不显示。
+# 这个包不在 requirements 里，是 mkdocs-glightbox 的传递依赖，不钉的话 CI 会拉到 1.x。
+selectolax<1.0
