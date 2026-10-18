@@ -595,4 +595,36 @@ html .md-typeset details > :last-child {
   object-fit: cover;
 }
 
+/* ==========================================================================
+   行内公式略微缩小
+   KaTeX 的字形比正文字体高，1em 渲染出来视觉上会显得比周围文字大一号，
+   行内夹在中文里尤其明显。这里缩到 0.9em。
+   —— 只命中行内（<span class="arithmatex">\(…\)</span>），
+     行间公式是 <div class="arithmatex">\[…\]</div>，不受影响。
+   想再小/再大一点，改下面这个 0.9em 即可（0.85 明显更小，0.95 几乎看不出）。
+   ========================================================================== */
+.md-typeset span.arithmatex {
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   行间公式的上下留白收紧
+   两个来源，都要治：
+     ① KaTeX 自带 .katex-display{margin:1em 0}；
+     ② 公式前面那个段落/列表的底距 .md-typeset p{margin:0 0 1.5em}。
+   ⚠️ 相邻垂直外边距会【折叠】，取两者最大值 —— 所以只改 ① 是没用的，
+      1.5em 的段落底距会把公式的 margin 完全吃掉。必须连 ② 一起收。
+   下面的 :has(+ div.arithmatex) 就是干这个的（:has 在 Chrome 105+/Safari 15.4+/Firefox 121+ 都支持）。
+   想更紧就调这两个 0.3em / 0.5em；调到 0 会让公式贴住文字。
+   ========================================================================== */
+.md-typeset .katex-display {
+  margin: 0.3em 0;
+}
+
+.md-typeset p:has(+ div.arithmatex),
+.md-typeset ul:has(+ div.arithmatex),
+.md-typeset ol:has(+ div.arithmatex) {
+  margin-bottom: 0.5em;
+}
+
 

@@ -119,7 +119,7 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
   # ⚠️ 改过 custom.css 就把 ?v= 的数字 +1，否则浏览器会用缓存里的旧样式。
-  - css/custom.css?v=20
+  - css/custom.css?v=23
 
 validation:
   nav:
@@ -190,6 +190,8 @@ nav:
               - 初期调研: research/paper_reading/video_gen/initial_summary.md
           - GPU 建模:
               - FlashGPU-Sim: research/paper_reading/gpu-sim/FlashGPU-Sim.md
+          - 数据压缩:
+              - ZIPSERV: research/paper_reading/compression/zipserve.md
       - GPU 测试:
           - H100 存储系统测试: research/gpu-bench/report.md
 
