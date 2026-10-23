@@ -58,8 +58,10 @@
   --code-radius: 0.3rem;        /* 代码块：6px */
   --code-radius-inline: 0.2rem; /* 行内 code：4px */
   /* 代码行高。⚠️ 代码区和左侧行号列必须用同一个值，
-     否则数字会与代码行逐行错开（下面靠 var() 强制共用）。 */
-  --code-line-height: 1.714;
+     否则数字会与代码行逐行错开（下面靠 var() 强制共用）。
+     1.714 太松（等于代码字号的 1.7 倍），收紧到 1.45。
+     再小会开始压到字母的下伸部（g/p/y 的尾巴），1.3 以下就别用了。 */
+  --code-line-height: 1.45;
 }
 
 /* 行内 code */
@@ -131,6 +133,7 @@
 .md-typeset .grid > .card {
   border-radius: var(--code-radius);
 }
+
 
 /* ==========================================================================
    正文排版 —— 对齐 Markdown Preview Enhanced 的 newsprint.css
@@ -205,9 +208,15 @@
   font-weight: 500;
 }
 
-/* 正文粗体同理 */
+/* 正文粗体
+   霞鹜文楷 webfont 只提供 font-weight:400 一档，写 500 时浏览器做的是"合成粗体"，
+   只比正文粗一丝，实际几乎看不出来。
+   这里提到 700（合成得更多、更明显），再叠一层极细的同色描边
+   （-webkit-text-stroke）把笔画压实 —— 纯靠合成粗体时笔画容易发虚、发糊。
+   觉得太粗就改 700 → 600；觉得还不够就加描边宽度 0.03em → 0.05em。 */
 .md-typeset strong {
-  font-weight: 500;
+  font-weight: 700;
+  -webkit-text-stroke: 0.00em currentColor;
 }
 
 /* ---- 列表 ---- */
@@ -407,10 +416,13 @@ html .md-typeset details > :last-child {
 }
 
 /* ==========================================================================
-   打印
-   打印笔记时去掉导航/侧栏/浮动按钮，并把链接地址印出来
+   打印 / 导出 PDF
+   Ctrl/Cmd+P → 存储为 PDF 就是最直接的导出方式，不需要额外插件。
+   这一节只管【纸面】：分页处别把图表腰斩、折叠块要展开、长代码别被裁掉。
+   ⚠️ 全部规则都在 @media print 里，不影响屏幕显示。
    ========================================================================== */
 @media print {
+  /* ① 去掉站点外壳 */
   .md-header,
   .md-sidebar,
   .md-footer,
@@ -421,16 +433,83 @@ html .md-typeset details > :last-child {
     display: none !important;
   }
 
+  /* ①-b 站点元信息：最后更新时间、编辑此页、公告条、标题后的 ¶ 都不该进 PDF */
+  .md-source-file,
+  .md-content__button,
+  .md-feedback,
+  .md-banner,
+  .md-announce,
+  .md-typeset .headerlink {
+    display: none !important;
+  }
+
   .md-content {
     max-width: 100%;
   }
 
-  /* 正文里的链接：在文字后面补出真实地址，纸面上也能查 */
+  /* ①-c 文档标题居中（只 h1 —— h2/h3 仍左对齐，否则整页没有层次） */
+  .md-typeset h1 {
+    text-align: center;
+  }
+
+  /* ② 折叠块（??? / ???+）在纸上必须是展开的，否则内容直接丢掉 */
+  details > *:not(summary) {
+    display: block !important;
+  }
+
+  /* 折叠块的标题在纸面上当作小标题用 */
+  details > summary {
+    font-weight: 700;
+    list-style: none;
+    margin-bottom: 0.5em;
+  }
+
+  /* ③ 别在图表、表格、代码块中间断页 */
+  figure,
+  table,
+  pre,
+  .highlight,
+  .katex-display {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* 标题后面紧跟内容，不要把标题单独留在页尾 */
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* ④ 长代码行换行，否则右侧会被裁掉 */
+  pre > code {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ⑤ 图片不要超过页面宽度，glightbox 的包裹层也去掉 */
+  img {
+    max-width: 100% !important;
+    break-inside: avoid;
+  }
+
+  a.glightbox {
+    text-decoration: none;
+  }
+
+  /* ⑥ 链接补出真实地址，纸面上也能查 */
   .md-typeset a[href^="http"]:not(.headerlink)::after {
     content: " (" attr(href) ")";
     font-size: 0.85em;
     color: var(--md-default-fg-color--light);
     word-break: break-all;
+  }
+
+  /* ⑦ 页边距交给浏览器默认（用户可以自己在打印对话框里调） */
+  @page {
+    margin: 1.5cm;
   }
 }
 

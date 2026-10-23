@@ -119,7 +119,7 @@ extra_css:
   - https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css
   - https://unpkg.com/katex@0/dist/katex.min.css
   # ⚠️ 改过 custom.css 就把 ?v= 的数字 +1，否则浏览器会用缓存里的旧样式。
-  - css/custom.css?v=23
+  - css/custom.css?v=28
 
 validation:
   nav:
@@ -197,3 +197,7 @@ nav:
 
   - Computer Science:
       - cs/index.md
+      - 汇编与接口:
+          - cs/assembly_interface/index.md
+          - "Chapter2: Microprocessor Architecture": cs/assembly_interface/chapter2.md
+          - "Project1: 高级语言特性的实现": cs/assembly_interface/project1.md
